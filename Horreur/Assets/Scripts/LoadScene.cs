@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadScene : MonoBehaviour
 {
     public int SceneIndex;
+    public float transitionTime;
+    public GameObject canvas;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +20,8 @@ public class LoadScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
+
     }
 
     private void OnCollisionEnter(Collision other)
@@ -24,8 +29,21 @@ public class LoadScene : MonoBehaviour
         Debug.Log("fdaswefsdf");
         if(other.gameObject.name == "perso")
         {
-            Debug.Log("machin");
-            SceneManager.LoadScene(SceneIndex + 1);
+           
+          
+            StartCoroutine(gestionChangementScene());
         }
+    }
+
+
+    IEnumerator gestionChangementScene()
+    {
+
+        canvas.GetComponent<Animator>().SetTrigger("start");
+      
+        yield return new WaitForSeconds(transitionTime);
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneIndex + 1);
+
     }
 }
