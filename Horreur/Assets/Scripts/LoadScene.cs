@@ -9,11 +9,14 @@ public class LoadScene : MonoBehaviour
     public int SceneIndex;
     public float transitionTime;
     public GameObject canvas;
+    public static bool isObjectiveDone;
+    public static int indexCount = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
+        isObjectiveDone = false;
         Debug.Log(SceneIndex);
     }
 
@@ -26,11 +29,11 @@ public class LoadScene : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log("fdaswefsdf");
-        if(other.gameObject.name == "perso")
+        
+        if(other.gameObject.name == "perso" && isObjectiveDone)
         {
-           
-          
+
+            Debug.Log("fdaswefsdf");
             StartCoroutine(gestionChangementScene());
         }
     }
