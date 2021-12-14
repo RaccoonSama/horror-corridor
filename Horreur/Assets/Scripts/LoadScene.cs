@@ -27,10 +27,10 @@ public class LoadScene : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         
-        if(other.gameObject.name == "perso" && isObjectiveDone)
+        if(other.gameObject.tag == "perso" && isObjectiveDone)
         {
 
             Debug.Log("fdaswefsdf");

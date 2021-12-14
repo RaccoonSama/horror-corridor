@@ -17,10 +17,10 @@ public class SceneApprove : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("woooooooooooooooooo");
-        if (other.gameObject.name == "perso")
+        
+        if (other.gameObject.tag == "perso")
         {
-            
+            Debug.Log("woooooooooooooooooo");
             LoadScene.isObjectiveDone = true;
         }
     }

@@ -16,7 +16,7 @@ public class SceneApprove1 : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if (other.gameObject.name == "perso")
+        if (other.gameObject.tag == "perso")
         {
             
            
