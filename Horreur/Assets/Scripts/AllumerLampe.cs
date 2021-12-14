@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AllumerLampe : MonoBehaviour
 {
@@ -8,11 +9,12 @@ public class AllumerLampe : MonoBehaviour
 	[SerializeField()] GameObject Lights; // all light effects and spotlight
 	[SerializeField()] AudioSource switch_sound; // audio of the switcher
 	[SerializeField()] ParticleSystem dust_particles; // dust particles
+	[SerializeField] InputActionReference triggerInputAction;
 
 	private Light spotlight;
 	private Material ambient_light_material;
 	private Color ambient_mat_color;
-	private bool is_enabled = false;
+	public static bool lumiereAllumee = false;
 
 	// Use this for initialization
 	void Start()
@@ -22,13 +24,6 @@ public class AllumerLampe : MonoBehaviour
 		ambient_light_material = Lights.transform.Find("ambient").GetComponent<Renderer>().material;
 		ambient_mat_color = ambient_light_material.GetColor("_TintColor");
 	}
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-			Switch();
-        }
-    }
 
     /// <summary>
     /// changes the intensivity of lights from 0 to 100.
@@ -48,8 +43,8 @@ public class AllumerLampe : MonoBehaviour
 	/// </summary>
 	public void Switch()
 	{
-		is_enabled = !is_enabled;
-		Lights.SetActive(is_enabled);
+		lumiereAllumee = !lumiereAllumee;
+		Lights.SetActive(lumiereAllumee);
 		if (switch_sound != null)
 			switch_sound.Play();
 	}
@@ -73,6 +68,21 @@ public class AllumerLampe : MonoBehaviour
 				dust_particles.gameObject.SetActive(false);
 			}
 		}
+	}
+
+    private void OnEnable()
+    {
+		triggerInputAction.action.performed += TriggerPressed;
+	}
+
+	private void TriggerPressed(InputAction.CallbackContext obj)
+	{
+		Switch();
+	}
+
+	private void OnDisable()
+	{
+		triggerInputAction.action.performed -= TriggerPressed;
 	}
 
 
