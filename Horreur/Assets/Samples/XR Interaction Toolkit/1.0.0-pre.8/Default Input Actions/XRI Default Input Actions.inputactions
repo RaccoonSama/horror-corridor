@@ -585,6 +585,22 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Grip",
+                    "type": "Value",
+                    "id": "20f842f0-3409-4dde-a651-872976659cca",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Trigger",
+                    "type": "Button",
+                    "id": "8e48466b-b383-4dac-870a-7f64a3a29970",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -895,6 +911,28 @@
                     "action": "Translate Anchor",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "2e1b171d-bfbb-4c8e-9a8b-fdea481341b1",
+                    "path": "<XRController>{RightHand}/grip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e873a0c1-685c-4a89-9787-bbf1aa7a21f7",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Trigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
