@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class AllumerLampe : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class AllumerLampe : MonoBehaviour
 	private Color ambient_mat_color;
 	public static bool lumiereAllumee = false;
 
+	public int batterieTemps = 100;
+	public GameObject batterie;
+
+
 	// Use this for initialization
 	void Start()
 	{
@@ -25,6 +30,22 @@ public class AllumerLampe : MonoBehaviour
 		ambient_mat_color = ambient_light_material.GetColor("_TintColor");
 	}
 
+    private void Update()
+    {
+        if (lumiereAllumee)
+        {
+			batterie.GetComponent<Slider>().value -= Time.deltaTime/8;
+		}
+        else
+        {
+			batterie.GetComponent<Slider>().value += Time.deltaTime/16;
+		}
+
+        if (batterie.GetComponent<Slider>().value >= 0)
+        {
+			Switch();
+        }
+	}
     /// <summary>
     /// changes the intensivity of lights from 0 to 100.
     /// call this from other scripts.

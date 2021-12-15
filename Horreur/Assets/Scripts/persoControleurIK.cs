@@ -15,8 +15,8 @@ public class persoControleurIK : MonoBehaviour {
 
     private void OnAnimatorIK()
     {
-        persoAnimateur.SetLookAtWeight(1);
-        persoAnimateur.SetLookAtPosition(cible.position);
+        //persoAnimateur.SetLookAtWeight(1);
+        //persoAnimateur.SetLookAtPosition(cible.position);
 
         persoAnimateur.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
         persoAnimateur.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
