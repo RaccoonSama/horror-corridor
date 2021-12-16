@@ -69,15 +69,23 @@ public class EnnemiChasseur : MonoBehaviour
 
     void EntrerFuirJoueur()
     {
-        GetComponent<NavMeshAgent>().speed = 2f;
+        GetComponent<NavMeshAgent>().speed = 2.5f;
         GetComponent<AudioSource>().PlayOneShot(sonFuite);
         GetComponent<Animator>().SetBool("Fuite", true);
+        agent.ResetPath();
+        Vector3 directionMarche = (Random.insideUnitSphere * 6f) + transform.position;
+        NavMeshHit navMeshHit;
+        NavMesh.SamplePosition(directionMarche, out navMeshHit, 6f, NavMesh.AllAreas);
+        Vector3 destination = navMeshHit.position;
+        agent.SetDestination(destination);
     }
     void FuirJoueur()
     {
-        //Méchant s'éloigne du joueur
-        agent.ResetPath();
-        GetComponent<NavMeshAgent>().SetDestination(-joueur.transform.position);
+        if (agent.remainingDistance <= 1f)
+        {
+            agent.ResetPath();
+            cerveau.ActiverEtat(FuirJoueur, EntrerFuirJoueur, SortirFuirJoueur);
+        }
 
         //Si le méchant reçoit la lumière et si le temps de vie est passé
         if (!lumiereAllumee)
@@ -87,7 +95,7 @@ public class EnnemiChasseur : MonoBehaviour
     }
     void SortirFuirJoueur()
     {
-        GetComponent<NavMeshAgent>().speed = 1f;
+        GetComponent<NavMeshAgent>().speed = 2f;
         GetComponent<Animator>().SetBool("Fuite", false);
     }
 

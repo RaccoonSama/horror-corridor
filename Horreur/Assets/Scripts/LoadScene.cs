@@ -16,13 +16,13 @@ public class LoadScene : MonoBehaviour
     void Start()
     {
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if (SceneIndex == 1 | SceneIndex == 2)
+       /* if (SceneIndex == 1 | SceneIndex == 2)
         {
             isObjectiveDone = false;
         }
         else { isObjectiveDone = true; }
         
-        Debug.Log("Scene" +SceneIndex + isObjectiveDone);
+        Debug.Log("Scene" +SceneIndex + isObjectiveDone);*/
     }
 
     // Update is called once per frame
@@ -35,9 +35,9 @@ public class LoadScene : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if(other.gameObject.tag == "perso" && isObjectiveDone)
+        if(other.gameObject.tag == "perso")
         {
-
+            // Ajouter && isObjectiveDone quand les objectifs vont être prenable
             Debug.Log("fdaswefsdf");
             StartCoroutine(gestionChangementScene());
         }
