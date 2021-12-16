@@ -16,14 +16,13 @@ public class AllumerLampe : MonoBehaviour
 	private Material ambient_light_material;
 	private Color ambient_mat_color;
 	public static bool lumiereAllumee = false;
-
-	public int batterieTemps = 100;
 	public GameObject batterie;
 
-
+	private ArmerLumiere armeLumiere;
 	// Use this for initialization
 	void Start()
 	{
+		armeLumiere = GetComponent<ArmerLumiere>();
 		// cache components
 		spotlight = Lights.transform.Find("Spotlight").GetComponent<Light>();
 		ambient_light_material = Lights.transform.Find("ambient").GetComponent<Renderer>().material;
@@ -34,6 +33,10 @@ public class AllumerLampe : MonoBehaviour
     {
         if (lumiereAllumee)
         {
+            if (armeLumiere.PeutTirer())
+            {
+				armeLumiere.TirerLumiere();
+            }
 			batterie.GetComponent<Slider>().value -= Time.deltaTime/8;
 		}
         else
@@ -41,7 +44,7 @@ public class AllumerLampe : MonoBehaviour
 			batterie.GetComponent<Slider>().value += Time.deltaTime/16;
 		}
 
-        if (batterie.GetComponent<Slider>().value >= 0)
+        if (batterie.GetComponent<Slider>().value <= 0)
         {
 			Switch();
         }
@@ -105,6 +108,4 @@ public class AllumerLampe : MonoBehaviour
 	{
 		triggerInputAction.action.performed -= TriggerPressed;
 	}
-
-
 }

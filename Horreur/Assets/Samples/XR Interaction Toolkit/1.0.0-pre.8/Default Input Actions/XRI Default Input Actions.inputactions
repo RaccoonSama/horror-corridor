@@ -170,6 +170,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "XPressed",
+                    "type": "Button",
+                    "id": "a5e2f244-3ae0-4612-b937-02ac250dbeb5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -511,6 +519,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Trigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1855516f-5b09-46ee-8154-e8c96583c648",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "XPressed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

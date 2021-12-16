@@ -16,8 +16,13 @@ public class LoadScene : MonoBehaviour
     void Start()
     {
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
-        isObjectiveDone = false;
-        Debug.Log(SceneIndex);
+        if (SceneIndex == 1 | SceneIndex == 2)
+        {
+            isObjectiveDone = false;
+        }
+        else { isObjectiveDone = true; }
+        
+        Debug.Log("Scene" +SceneIndex + isObjectiveDone);
     }
 
     // Update is called once per frame

@@ -2,27 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class EnnemiChasseur : MonoBehaviour
 {
     private NavMeshAgent agent;
     private MachineAEtat cerveau;
-    private float tempsDeVie;
-    private float distanceMax;
-
-    //private bool aveugle;
+    public int vieEnnemi;
     private bool attrapeJoueur;
-    private bool contactVisuel;
-
+    private bool contactlumiere;
     private bool lumiereAllumee;
-
+    public GameObject boutLampeDePoche;
     public GameObject joueur;
-    public Camera raycastCamera;
+    public AudioClip sonChasse;
+    public AudioClip sonFuite;
+
     private void Start()
     {
-        distanceMax = 1.9f;
-
-        tempsDeVie = Random.Range(10, 20);
         agent = GetComponent<NavMeshAgent>();
         cerveau = GetComponent<MachineAEtat>();
         cerveau.ActiverEtat(ChasserJoueur, EntrerChasserJoueur, SortirChasserJoueur);
@@ -30,21 +26,6 @@ public class EnnemiChasseur : MonoBehaviour
 
     private void Update()
     {
-        tempsDeVie -= Time.deltaTime;
-
-        //Code pour vérifier si le joueur pointe le méchant
-        Ray camRay = raycastCamera.ScreenPointToRay(Input.mousePosition, raycastCamera.stereoActiveEye);
-        RaycastHit infoCollision;
-
-        if (Physics.Raycast(camRay.origin, camRay.direction, out infoCollision, distanceMax) && infoCollision.collider.gameObject.tag == "Joueur")
-        {
-            contactVisuel = true;
-        }
-        else
-        {
-            contactVisuel = false;
-        }
-
         //Code pour vérifier si la lumière est allumé
         if (AllumerLampe.lumiereAllumee)
         {
@@ -59,10 +40,10 @@ public class EnnemiChasseur : MonoBehaviour
     void EntrerChasserJoueur()
     {
         agent.ResetPath();
-        //Animation de chasse du méchant
-        GetComponent<Animator>().SetBool("chasse", true);
+        //GetComponent<Animator>().SetBool("chasse", true);
 
         //Produire son de chasse
+        GetComponent<AudioSource>().PlayOneShot(sonChasse);
     }
     void ChasserJoueur()
     {
@@ -76,48 +57,72 @@ public class EnnemiChasseur : MonoBehaviour
         }
 
         //Si le méchant reçoit lumière : trigger state de fuite
-        if (contactVisuel && lumiereAllumee)
+        if (contactlumiere && lumiereAllumee)
         {
             cerveau.ActiverEtat(FuirJoueur, EntrerFuirJoueur, SortirFuirJoueur);
         }
     }
     void SortirChasserJoueur()
     {
-        GetComponent<Animator>().SetBool("chasse", false);
+
     }
 
     void EntrerFuirJoueur()
     {
-        GetComponent<Animator>().SetBool("fuite", true);
+        GetComponent<NavMeshAgent>().speed = 2f;
+        GetComponent<AudioSource>().PlayOneShot(sonFuite);
+        GetComponent<Animator>().SetBool("Fuite", true);
     }
     void FuirJoueur()
     {
         //Méchant s'éloigne du joueur
+        agent.ResetPath();
+        GetComponent<NavMeshAgent>().SetDestination(-joueur.transform.position);
 
         //Si le méchant reçoit la lumière et si le temps de vie est passé
-        if (tempsDeVie <= 0 && true)
+        if (!lumiereAllumee)
         {
-            cerveau.ActiverEtat(Mourir, EntrerMourir, SortirMourir);
+            cerveau.ActiverEtat(ChasserJoueur, EntrerChasserJoueur, SortirChasserJoueur);
         }
     }
     void SortirFuirJoueur()
     {
-        GetComponent<Animator>().SetBool("fuite", false);
+        GetComponent<NavMeshAgent>().speed = 1f;
+        GetComponent<Animator>().SetBool("Fuite", false);
     }
 
     void EntrerMourir()
     {
         //Produire son de mort
 
-        GetComponent<Animator>().SetBool("mort", true);
+        //GetComponent<Animator>().SetBool("mort", true);
     }
     void Mourir()
     {
         //despawn le méchant
         Destroy(gameObject);
     }
+    
     void SortirMourir()
     {
 
+    }
+    public void PrendreDegats(int degats)
+    {
+        vieEnnemi -= degats;
+
+        if (vieEnnemi <= 0)
+            cerveau.ActiverEtat(Mourir, EntrerMourir, SortirMourir);
+
+        contactlumiere = true;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "perso")
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
+        }
     }
 }
