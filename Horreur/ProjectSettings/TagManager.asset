@@ -7,6 +7,7 @@ TagManager:
   - perso
   - Joueur
   - Observateur
+  - Chasseur
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - objectifLayer
   - Joueur
   - perso
-  - 
-  - 
+  - Observateur
+  - Chasseur
   - 
   - 
   - 

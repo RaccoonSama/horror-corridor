@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class AllumerLampe : MonoBehaviour
 {
@@ -15,16 +16,39 @@ public class AllumerLampe : MonoBehaviour
 	private Material ambient_light_material;
 	private Color ambient_mat_color;
 	public static bool lumiereAllumee = false;
+	public GameObject batterie;
 
+	private ArmerLumiere armeLumiere;
 	// Use this for initialization
 	void Start()
 	{
+		armeLumiere = GetComponent<ArmerLumiere>();
 		// cache components
 		spotlight = Lights.transform.Find("Spotlight").GetComponent<Light>();
 		ambient_light_material = Lights.transform.Find("ambient").GetComponent<Renderer>().material;
 		ambient_mat_color = ambient_light_material.GetColor("_TintColor");
 	}
 
+    private void Update()
+    {
+        if (lumiereAllumee)
+        {
+            if (armeLumiere.PeutTirer())
+            {
+				armeLumiere.TirerLumiere();
+            }
+			batterie.GetComponent<Slider>().value -= Time.deltaTime/8;
+		}
+        else
+        {
+			batterie.GetComponent<Slider>().value += Time.deltaTime/16;
+		}
+
+        if (batterie.GetComponent<Slider>().value <= 0)
+        {
+			Switch();
+        }
+	}
     /// <summary>
     /// changes the intensivity of lights from 0 to 100.
     /// call this from other scripts.
@@ -84,6 +108,4 @@ public class AllumerLampe : MonoBehaviour
 	{
 		triggerInputAction.action.performed -= TriggerPressed;
 	}
-
-
 }
