@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Description générale
+ * Script qui permet de changer les états des ennemis définis dans le script
+ * Etat.
+ * 
+ * Adapté par : Aryane Duperron
+ */
 public class MachineAEtat : MonoBehaviour
 {
 

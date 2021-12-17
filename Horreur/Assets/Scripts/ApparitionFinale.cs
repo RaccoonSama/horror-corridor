@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Description générale
+ * Script qui fait apparaître le chasseur dans la scène finale
+ * 
+ * Créé par : Aryane Duperron
+ * Dernière modifications : 16 décembre 2021
+ */
 public class ApparitionFinale : MonoBehaviour
 {
     public GameObject Chasseur;
-    // Start is called before the first frame update
+
     void Start()
     {
         Invoke("ApparitionChasseur", 15);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Fait apparaître le chasseur
+    /// </summary>
     void ApparitionChasseur()
     {
         Chasseur.SetActive(true);

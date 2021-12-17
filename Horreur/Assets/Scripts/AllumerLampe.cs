@@ -4,26 +4,29 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/*****************************************************************
+ * Script AllumerLampe()
+ * Pris dans l'asset store de Unity et modifié par Aryane Duperron
+ * https://assetstore.unity.com/packages/3d/props/tools/flashlight-pro-53053
+ ****************************************************************/
 public class AllumerLampe : MonoBehaviour
 {
 	[Space(10)]
-	[SerializeField()] GameObject Lights; // all light effects and spotlight
-	[SerializeField()] AudioSource switch_sound; // audio of the switcher
-	[SerializeField()] ParticleSystem dust_particles; // dust particles
-	[SerializeField] InputActionReference triggerInputAction;
-
+	[SerializeField()] GameObject Lights; // Les lumières de la lampe de poche
+	[SerializeField()] AudioSource switch_sound; // Le son de clic lorsque la lampe de poche allume
+	[SerializeField()] ParticleSystem dust_particles; // Des particules de lumière
+	[SerializeField] InputActionReference triggerInputAction;	// L'input de trigger sur la manette de VR
 	private Light spotlight;
 	private Material ambient_light_material;
 	private Color ambient_mat_color;
-	public static bool lumiereAllumee = false;
-	public GameObject batterie;
 
-	private ArmerLumiere armeLumiere;
-	// Use this for initialization
+	public static bool lumiereAllumee = false;
+	public GameObject batterie;			// Le HUD de la batterie
+	private ArmerLumiere armeLumiere;	// Les balles de lumières à tirer
+
 	void Start()
 	{
 		armeLumiere = GetComponent<ArmerLumiere>();
-		// cache components
 		spotlight = Lights.transform.Find("Spotlight").GetComponent<Light>();
 		ambient_light_material = Lights.transform.Find("ambient").GetComponent<Renderer>().material;
 		ambient_mat_color = ambient_light_material.GetColor("_TintColor");
@@ -31,8 +34,10 @@ public class AllumerLampe : MonoBehaviour
 
     private void Update()
     {
+		// Si la lumière est allumée, baisse la batterie dans la lampe de poche
         if (lumiereAllumee)
         {
+			// Si la flashlight peut tirer, génère des balles de lumière
             if (armeLumiere.PeutTirer())
             {
 				armeLumiere.TirerLumiere();
@@ -41,17 +46,18 @@ public class AllumerLampe : MonoBehaviour
 		}
         else
         {
+			// Augmente la batterie
 			batterie.GetComponent<Slider>().value += Time.deltaTime/16;
 		}
-
+		// Si la batterie est à plat, ferme la lampe de poche
         if (batterie.GetComponent<Slider>().value <= 0)
         {
 			Switch();
         }
 	}
+
     /// <summary>
-    /// changes the intensivity of lights from 0 to 100.
-    /// call this from other scripts.
+	/// change l'intesité de la lumière de 0 à 100
     /// </summary>
     public void Change_Intensivity(float percentage)
 	{
@@ -62,8 +68,7 @@ public class AllumerLampe : MonoBehaviour
 
 
 	/// <summary>
-	/// switch current state  ON / OFF.
-	/// call this from other scripts.
+	/// Change la valeur de la lumière allumée
 	/// </summary>
 	public void Switch()
 	{
@@ -75,7 +80,7 @@ public class AllumerLampe : MonoBehaviour
 
 
 	/// <summary>
-	/// enables the particles.
+	/// Active les particules
 	/// </summary>
 	public void Enable_Particles(bool value)
 	{
@@ -99,6 +104,7 @@ public class AllumerLampe : MonoBehaviour
 		triggerInputAction.action.performed += TriggerPressed;
 	}
 
+	// Si le joueur appuie sur le trigger, active ou désactive la lampe de poche
 	private void TriggerPressed(InputAction.CallbackContext obj)
 	{
 		Switch();

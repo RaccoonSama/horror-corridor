@@ -4,16 +4,24 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+/*
+ * Description générale
+ * Script qui défini le comportement des ennemis chasseurs
+ * 
+ * Créé par : Aryane Duperron
+ * Dernière modifications : 16 décembre 2021
+ */
 public class EnnemiChasseur : MonoBehaviour
 {
+    /* variables de la machine à état */
     private NavMeshAgent agent;
     private MachineAEtat cerveau;
-    public int vieEnnemi;
-    private bool attrapeJoueur;
-    private bool contactlumiere;
-    private bool lumiereAllumee;
-    public GameObject boutLampeDePoche;
+    public int vieEnnemi;           // Le nombre de points de vie de l'ennemi
+    private bool contactlumiere;    // Détermine si l'ennemi est en contact avec la lumière
+    private bool lumiereAllumee;    // Détermine si la lumière est allumée
+    public GameObject boutLampeDePoche; 
     public GameObject joueur;
+    /* Variables en lien avec l'audio */
     public AudioClip sonChasse;
     public AudioClip sonFuite;
 
@@ -40,23 +48,15 @@ public class EnnemiChasseur : MonoBehaviour
     void EntrerChasserJoueur()
     {
         agent.ResetPath();
-        //GetComponent<Animator>().SetBool("chasse", true);
-
-        //Produire son de chasse
+        // Produire son de chasse
         GetComponent<AudioSource>().PlayOneShot(sonChasse);
     }
     void ChasserJoueur()
     {
-        //Méchant va vers le joueur
+        // Méchant va vers le joueur
         GetComponent<NavMeshAgent>().SetDestination(joueur.transform.position);
 
-        //Si le méchant touche au joueur : défaite
-        if (attrapeJoueur)
-        {
-            //Amène au script de défaite
-        }
-
-        //Si le méchant reçoit lumière : trigger state de fuite
+        // Si le méchant reçoit lumière : trigger state de fuite
         if (contactlumiere && lumiereAllumee)
         {
             cerveau.ActiverEtat(FuirJoueur, EntrerFuirJoueur, SortirFuirJoueur);
@@ -69,6 +69,7 @@ public class EnnemiChasseur : MonoBehaviour
 
     void EntrerFuirJoueur()
     {
+        // Quand le méchant est en fuite, il court n'importe où et un son de fuite est joué
         GetComponent<NavMeshAgent>().speed = 2.5f;
         GetComponent<AudioSource>().PlayOneShot(sonFuite);
         GetComponent<Animator>().SetBool("Fuite", true);
@@ -81,13 +82,14 @@ public class EnnemiChasseur : MonoBehaviour
     }
     void FuirJoueur()
     {
+        // Si l'ennemi en fuite est près de son point d'arrivée, il fuit vers un autre point
         if (agent.remainingDistance <= 1f)
         {
             agent.ResetPath();
             cerveau.ActiverEtat(FuirJoueur, EntrerFuirJoueur, SortirFuirJoueur);
         }
 
-        //Si le méchant reçoit la lumière et si le temps de vie est passé
+        //Si le joueur ferme sa lumière, l'ennemi se remet à le chasser
         if (!lumiereAllumee)
         {
             cerveau.ActiverEtat(ChasserJoueur, EntrerChasserJoueur, SortirChasserJoueur);
@@ -95,38 +97,27 @@ public class EnnemiChasseur : MonoBehaviour
     }
     void SortirFuirJoueur()
     {
+        // Remet la vitesse du méchant normale et active son animation d'attaque
         GetComponent<NavMeshAgent>().speed = 2f;
         GetComponent<Animator>().SetBool("Fuite", false);
     }
 
-    void EntrerMourir()
-    {
-        //Produire son de mort
-
-        //GetComponent<Animator>().SetBool("mort", true);
-    }
-    void Mourir()
-    {
-        //despawn le méchant
-        Destroy(gameObject);
-    }
-    
-    void SortirMourir()
-    {
-
-    }
+    /// <summary>
+    /// Fonction qui est appelée lorsque l'ennemi doit perdre de la vie
+    /// </summary>
+    /// <param name="degats"> Les dégats de l'attaque de lumière</param>
     public void PrendreDegats(int degats)
     {
         vieEnnemi -= degats;
-
-        if (vieEnnemi <= 0)
-            cerveau.ActiverEtat(Mourir, EntrerMourir, SortirMourir);
-
+        // Si l'ennemi n'a plus de vie, son gameObject est détruit
+        if (vieEnnemi <= 0) { Destroy(gameObject); }
+            
         contactlumiere = true;
     }
 
     private void OnTriggerEnter(Collider collision)
     {
+        // Si l'ennemi touche au joueur, reload la scène
         if (collision.gameObject.tag == "perso")
         {
             Scene scene = SceneManager.GetActiveScene();

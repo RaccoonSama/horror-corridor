@@ -4,26 +4,29 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+/*
+ * Description générale
+ * Script qui défini le comportement des ennemis rôdeurs
+ * 
+ * Créé par : Aryane Duperron
+ * Dernière modifications : 16 décembre 2021
+ */
 public class EnnemiRodeur : MonoBehaviour
 {
+    /* variables de la machine à état */
     private NavMeshAgent agent;
     private MachineAEtat cerveau;
 
-    private bool alerte;
-    private bool attrapeJoueur;
-    private bool lumiereAllumee;
-    public GameObject joueur;
+    private bool lumiereAllumee;    // Détermine si la lampe de poche est allumée
+    public GameObject joueur;       // Le gameObject du joueur
+
     /* Variables en lien avec l'audio */
-    //public AudioClip fredonnement;
     public AudioClip sonAttaque;
     AudioSource audioSource;
 
-    float changerEsprit;
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        alerte = false;
-        attrapeJoueur = false;
         agent = GetComponent<NavMeshAgent>();
         cerveau = GetComponent<MachineAEtat>();
         cerveau.ActiverEtat(Marcher, EntrerMarcher, SortirMarcher);
@@ -32,23 +35,14 @@ public class EnnemiRodeur : MonoBehaviour
     private void Update()
     {
         //Code pour vérifier si la lumière est allumé
-        if (AllumerLampe.lumiereAllumee)
-        {
-            lumiereAllumee = true;
-        }
-        else
-        {
-            lumiereAllumee = false;
-        }
+        if (AllumerLampe.lumiereAllumee){lumiereAllumee = true;}
+        else{lumiereAllumee = false;}
     }
 
     void EntrerMarcher()
     {
-        //audioSource.volume = Random.Range(0.25f, 0.3f);
+        // Fait marcher aléatoirement l'ennemi dans la scène
         audioSource.pitch = Random.Range(1f, 1.2f);
-        //audioSource.PlayOneShot(fredonnement);
-        //animation de marche
-        //GetComponent<Animator>().SetBool("marche", true);
         Vector3 directionMarche = (Random.insideUnitSphere * 6f) + transform.position;
         NavMeshHit navMeshHit;
         NavMesh.SamplePosition(directionMarche, out navMeshHit, 6f, NavMesh.AllAreas);
@@ -57,14 +51,13 @@ public class EnnemiRodeur : MonoBehaviour
     }
     void Marcher()
     {
+        // Si l'ennemi est près de son point d'arrivée, il marche à un autre point
         if (agent.remainingDistance <= 1f)
         {
             agent.ResetPath();
             cerveau.ActiverEtat(Marcher, EntrerMarcher, SortirMarcher);
         }
-        //produire son en loop
-        //GetComponent<AudioSource>().Play(fredonnement);
-        //Chasse le joueur si lumière allumée
+        // Si la lumière est allumée, le rôdeur chasse le joueur
         if (lumiereAllumee)
         {
             cerveau.ActiverEtat(ChasserJoueur, EntrerChasserJoueur, SortirChasserJoueur);
@@ -72,32 +65,24 @@ public class EnnemiRodeur : MonoBehaviour
     }
     void SortirMarcher()
     {
-        //GetComponent<Animator>().SetBool("marche", false);
+
     }
 
     void EntrerChasserJoueur()
     {
         agent.ResetPath();
-        //Animation de chasse du méchant
+        // Animation de chasse du méchant
         GetComponent<Animator>().SetBool("Chasse", true);
         GetComponent<NavMeshAgent>().speed = 1f;
 
-        //Produire son de chasse
+        // Produire son de chasse
         audioSource.PlayOneShot(sonAttaque);
         audioSource.pitch = 1.3f;
     }
     void ChasserJoueur()
     {
-        //Méchant va vers le joueur
+        // Le méchant va vers le joueur
         GetComponent<NavMeshAgent>().SetDestination(joueur.transform.position);
-
-        //Si le méchant touche au joueur : défaite
-        if (attrapeJoueur)
-        {
-            //Amène au script de défaite
-            
-
-        }
 
         //Si le joueur ferme sa lumière
         if (!lumiereAllumee)
@@ -107,6 +92,7 @@ public class EnnemiRodeur : MonoBehaviour
     }
     void SortirChasserJoueur()
     {
+        // Change la vitesse de l'ennemi et il arrête de chasser
         GetComponent<NavMeshAgent>().speed = 0.4f;
         audioSource.pitch = 1f;
         GetComponent<Animator>().SetBool("Chasse", false);
@@ -114,6 +100,7 @@ public class EnnemiRodeur : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        // Si l'ennemi touche au joueur, reload la scène
         if (collision.gameObject.tag == "perso")
         {
             lumiereAllumee = false;

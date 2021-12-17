@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/* 
+ * Description générale
+ * Ce script définie ce qu'est la classe Etat
+ * qui est utilisée par les ennemis. Les ennemis utilisent des
+ * états d'entrée, d'activation et de sortie définies ici.
+ * 
+ * Script Adapté par Aryane Duperron
+ */
 public class Etat
 {
     public Action ActiverAction, EntrerAction, SortirAction;
