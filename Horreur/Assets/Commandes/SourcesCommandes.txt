@@ -1,0 +1,20 @@
+Sources :
+
+Sons
+son de pas : https://freesound.org/people/falcospizaetus/sounds/489955/
+rire de fuite : https://freesound.org/people/Reitanna/sounds/344031/
+rire de chasse : https://freesound.org/people/Gitanki/sounds/172711/
+fredonnement : https://freesound.org/people/Hawkeye_Sprout/sounds/469071/
+rire fille : https://freesound.org/people/Yudena/sounds/377582/
+
+Modèles 3D
+FlashLight : https://assetstore.unity.com/packages/3d/props/tools/flashlight-pro-53053
+L'asile : https://assetstore.unity.com/packages/3d/environments/urban/abandoned-asylum-49137
+Objets de la morgue : https://assetstore.unity.com/packages/3d/environments/morgue-room-pbr-65817
+l'hôpital : https://assetstore.unity.com/packages/3d/environments/pbr-hospital-horror-pack-free-80117
+
+Commandes :
+
+Ouvrir et fermer le Menu : bouton X sur la manette gauche
+Cliquer sur des éléments du menu : Trigger sur la manette gauche
+Ouvrir et fermer la flashLight : Trigger sur la manette droite
